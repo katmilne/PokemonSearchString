@@ -12,16 +12,8 @@ export default function HomePage() {
 //   };
 
   return (
-    <div className='flex flex-col items-center '>
-        <Image
-            src="/favicon.png"
-            alt="Pixel chansey"
-            width={200}               // Width in pixels
-            height={300}              // Height in pixels
-        />
-        <div className='size-30 text-2xl'>
-            Pokémon Search String Builder
-        </div>
+    <div className='flex justify-center'>
+        MAIN PAGE CONTENT
     </div>
     
 

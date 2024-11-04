@@ -7,9 +7,10 @@ interface SearchBuilderProps {
 
 const SearchBuilder: React.FC<SearchBuilderProps> = ({ searchString }) => {
   return (
-    <div>
-      <h2>Search String:</h2>
-      <p>{searchString || "Click buttons to build your search!"}</p>
+    <div className="p-4 bg-gray-100 rounded-lg shadow-md w-screen my-6">
+      <p className={`text-xl ${searchString ? 'text-gray-800 text-center' : 'text-gray-500 italic text-center'}`}>
+        {searchString || "Click buttons to build your search!"}
+      </p>
     </div>
   );
 };

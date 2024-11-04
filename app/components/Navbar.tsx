@@ -12,10 +12,10 @@ export default function Navbar() {
                 <div className='text-3xl font-bold text-right'>
                     PokéString 
                 </div>
-                <div className='text-pink-500 text-sm font-light text-right'>
+                <div className='text-black text-sm font-light text-right'>
                     Pokémon Go Search 
                 </div>
-                <div className='text-pink-500 text-sm font-light text-right'>
+                <div className='text-black text-sm font-light text-right'>
                     String Builder
                 </div>
             </div>

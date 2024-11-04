@@ -1,32 +1,70 @@
 // app/page.tsx
+"use client"; // Don't forget this directive
+
 import React, { useState } from 'react';
-import Image from 'next/image';
-// import SearchBuilder from './components/SearchBuilder';
-// import Button from './components/Button';
+import SearchBuilder from './components/SearchBuilder';
+import Button from './components/Button';
+
+const buttonOptions = [
+  { text: "Fire Type", value: "fire" },
+  { text: "Legendary", value: "legendary" },
+  { text: "CP > 1000", value: "cp>1000" },
+  { text: "Shiny", value: "shiny" },
+  // Add more button options as needed
+];
 
 export default function HomePage() {
-//   const [searchString, setSearchString] = useState('');
+  const [searchString, setSearchString] = useState('');
+  const [selectedButtons, setSelectedButtons] = useState<string[]>([]);
 
-//   const addToSearchString = (text: string) => {
-//     setSearchString(prev => `${prev} ${text}`.trim());
-//   };
+  const addToSearchString = (text: string) => {
+    setSearchString(prev => (prev ? `${prev}&${text}` : text).trim());
+    setSelectedButtons(prev => [...prev, text]); // Add selected text to the state
+  };
+
+  const removeLastFromSearchString = () => {
+    // Remove the last string from the searchString
+    const lastString = selectedButtons[selectedButtons.length - 1];
+    if (lastString) {
+      setSearchString(prev => {
+        const newString = prev.replace(`&${lastString}`, '').replace(`${lastString}`, '').trim();
+        return newString;
+      });
+      setSelectedButtons(prev => prev.slice(0, -1)); // Remove the last selected string
+    }
+  };
 
   return (
-    <div className='flex justify-center'>
-        MAIN PAGE CONTENT
-    </div>
+    <div>
+        <div className='flex mx-[20%]'>
+            <SearchBuilder searchString={searchString} />
     
-
-
-    // <div>
-    //   <SearchBuilder searchString={searchString} />
-    //   <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-    //     <Button text="Fire Type" onClick={() => addToSearchString("fire")} />
-    //     <Button text="Legendary" onClick={() => addToSearchString("legendary")} />
-    //     <Button text="CP > 1000" onClick={() => addToSearchString("cp>1000")} />
-    //     <Button text="Shiny" onClick={() => addToSearchString("shiny")} />
-    //     {/* Add more buttons as needed */}
-    //   </div>
-    // </div>
+            {/* Arrow back button next to search string */}
+            {selectedButtons.length > 0 && (
+            <div className="flex items-center mx-4 justify-center">
+                <button 
+                onClick={removeLastFromSearchString} 
+                className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+                >
+                Undo
+                </button>
+            </div>
+            )}
+        </div>
+  
+      {/* Button options */}
+      <div className="flex gap-4 mt-4 justify-center">
+        {buttonOptions.map(option => (
+          !selectedButtons.includes(option.value) && (
+            <Button 
+              key={option.value} 
+              text={option.text} 
+              onClick={() => addToSearchString(option.value)} 
+            />
+          )
+        ))}
+      </div>
+    </div>
   );
+  
 }

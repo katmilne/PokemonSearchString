@@ -22,8 +22,8 @@ export default function Navbar() {
             <Image
                 src="/favicon.png"
                 alt="Pixel chansey"
-                width={120}               // Width in pixels
-                height={200}              // Height in pixels
+                width={120}               
+                height={200}              
             />
         </div>
         {/* Add more links as needed */}

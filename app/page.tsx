@@ -25,6 +25,13 @@ const typeOptions = [
   { text: "Fairy", value: "fairy", color: "bg-[#D685AD]" },
 ];
 
+const regions = [
+  { text: "Hoenn", value: "kanto" },
+  { text: "Mythical", value: "johto" },
+  { text: "Shiny", value: "kalos" },
+  { text: "Weather Boosted", value: "weather_boosted" },
+];
+
 const searchCriteriaOptions = [
   { text: "Legendary", value: "legendary" },
   { text: "Mythical", value: "mythical" },
@@ -36,14 +43,29 @@ export default function HomePage() {
   const [searchString, setSearchString] = useState('');
   const [currentOperator, setCurrentOperator] = useState<'&' | ','>('&');
   const [isNegate, setIsNegate] = useState(false);
+  const [cpEqualValue, setCpEqualValue] = useState<string | number>('');
+  const [cpLower, setCpLower] = useState<string | number>('');
+  const [cpHigher, setCpHigher] = useState<string | number>('');
 
   const addToSearchString = (value: string) => {
     const negationSymbol = isNegate ? '!' : '';
     setSearchString(prev => (prev ? `${prev}${currentOperator}${negationSymbol}${value}` : `${negationSymbol}${value}`));
   };
 
+  const handleActionCpLessMoreThan = () => {
+    const cpLowerVal = (cpLower == ''? '' : cpLower)
+    const cpHigherVal = (cpHigher == ''? '' : cpHigher)
+    if(cpLowerVal != ''|| cpHigherVal != '') {
+      addToSearchString("cp" +cpLowerVal +"-"+ cpHigherVal);
+    }
+    
+  };
+  const handleActionCpEqual = () => {
+    addToSearchString("cp" + cpEqualValue);
+  };
+
   const toggleNegation = () => {
-    setIsNegate(prev => !prev); // Correctly toggle state
+    setIsNegate(prev => !prev);
   };
 
   const setAndOperator = () => {
@@ -63,33 +85,34 @@ export default function HomePage() {
       <SearchBuilder searchString={searchString} />
       <div className='flex'>
         <div className="items-center mx-auto">
-          <div className="flex flex-row gap-8 mt-4 justify-center my-2">
-            <div className="mt-4 flex gap-4">
+          <div className="flex flex-row gap-8 justify-center">
+            <div className="mt-2 flex">
               <button
                 onClick={setAndOperator}
-                className={`py-2 px-4 rounded ${currentOperator === '&' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+                className={`py-2 px-4 ${currentOperator === '&' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
               >
-                AND (&)
+                AND
               </button>
               <button
                 onClick={setOrOperator}
-                className={`py-2 px-4 rounded ${currentOperator === ',' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+                className={`py-2 px-4 ${currentOperator === ',' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
               >
-                OR (,)
+                OR
               </button>
               <button
                 onClick={toggleNegation}
-                className={`py-2 px-4 rounded ${isNegate ? 'bg-rose-500 text-white' : 'bg-gray-300 text-black'}`}
+                className={`mx-4 py-2 px-4 w rounded ${isNegate ? 'bg-rose-500 text-white' : 'bg-gray-300 text-black'}`}
               >
-                Negate {!isNegate ? 'OFF' : 'ON'}
+                Not {!isNegate ? '(OFF)' : '(ON)'}
               </button>
+            
               <button 
                 onClick={clearAll} 
                 className="bg-slate-500 text-white py-2 px-4 rounded hover:bg-rose-500 transition duration-300">
                 Clear All
               </button>
             </div>
-          </div>
+        </div>
 
           {/* Types Section */}
           <div className="flex flex-col items-center my-2">
@@ -106,20 +129,129 @@ export default function HomePage() {
             </div>
           </div>
 
+          
+
           {/* Search Criteria Section */}
           <div className="flex flex-col items-center my-2">
-            <h3 className="text-lg font-semibold mb-2">Search Criteria</h3>
+            <h3 className="text-lg font-semibold mb-2">Attributes</h3>
             <div className="flex gap-4 flex-wrap">
-              {searchCriteriaOptions.map(option => (
-                <Button 
-                  key={option.value} 
-                  text={option.text} 
-                  onClick={() => addToSearchString(option.value)} 
-                  className="bg-gray-300 text-black" // Default color for search criteria
-                />
-              ))}
+                {searchCriteriaOptions.map(option => (
+                    <Button 
+                        key={option.value} 
+                        text={option.text} 
+                        onClick={() => addToSearchString(option.value)} 
+                        className="bg-gray-300 text-black" // Default color for search criteria
+                    />
+                ))}
             </div>
           </div>
+
+          {/* CP */}
+          <div className="flex flex-col items-center my-2 mx-auto">
+            <h3 className="text-lg font-semibold">CP</h3>
+            <div className='flex flex-col w-screen items-center'>
+
+              {/* CP = */}
+              <div className='my-4'>
+                <span className='my-auto font-bold'> CP = </span>
+                <input
+                  className=' text-center w-60 
+                    border 
+                    border-gray-300 
+                    rounded-md 
+                    p-2 
+                    focus:outline-none 
+                    focus:border-slate-500 
+                    focus:ring-1 
+                    focus:ring-slate-500 
+                    transition 
+                    duration-200 
+                    ease-in-out 
+                    placeholder:text-gray-400
+                    placeholder:italic
+                    mx-2'
+                  type="number"
+                  placeholder='Enter value greater than 0'
+                  min='1'
+                  value={cpEqualValue}
+                  onChange={(e) => {
+                    const input = Number(e.target.value)
+                    setCpEqualValue(input >= 1 ? input : '');
+                  }}
+                  
+                />
+                <Button
+                  text="ADD"
+                  onClick={handleActionCpEqual}
+                  className='bg-gray-300 text-black'
+                />
+              </div>
+              
+              {/* < CP < */}
+              <div className=''>
+              <input
+                  className=' text-center w-60 
+                    border 
+                    border-gray-300 
+                    rounded-md 
+                    p-2 
+                    focus:outline-none 
+                    focus:border-slate-500 
+                    focus:ring-1 
+                    focus:ring-slate-500 
+                    transition 
+                    duration-200 
+                    ease-in-out 
+                    placeholder:text-gray-400
+                    placeholder:italic
+                    mx-2'
+                  type="number"
+                  placeholder='Enter lower value'
+                  min='0'
+                  value={cpLower}
+                  onChange={(e) => {
+                    const input = Number(e.target.value)
+                    setCpLower(input >= 0 ? input : '');
+                  }}
+                  
+                />
+                <span className='my-auto font-bold'> &lt; CP &lt; </span>
+                <input
+                  className=' text-center w-60 
+                    border 
+                    border-gray-300 
+                    rounded-md 
+                    p-2 
+                    focus:outline-none 
+                    focus:border-slate-500 
+                    focus:ring-1 
+                    focus:ring-slate-500 
+                    transition 
+                    duration-200 
+                    ease-in-out 
+                    placeholder:text-gray-400
+                    placeholder:italic
+                    mx-2'
+                  type="number"
+                  placeholder='Enter upper value'
+                  min='0'
+                  value={cpHigher}
+                  onChange={(e) => {
+                    const input = Number(e.target.value)
+                    setCpHigher(input >= 0 ? input : '');
+                  }}
+                  
+                />
+                <Button
+                  text="ADD"
+                  onClick={handleActionCpLessMoreThan}
+                  className='bg-gray-300 text-black'
+                />
+              </div>
+              
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

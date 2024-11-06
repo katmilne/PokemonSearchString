@@ -38,6 +38,14 @@ const regions = [
   { text: "Paldea", value: "paldea" }
 ]
 
+const appraisal = [
+  { text: "0 Stars", value: "0*", color: "bg-amber-300" },
+  { text: "1 Stars", value: "1*", color: "bg-amber-300" },
+  { text: "2 Stars", value: "2*", color: "bg-amber-300" },
+  { text: "3 Stars", value: "3*", color: "bg-amber-300" },
+  { text: "Perfect", value: "4*", color: "bg-red-400"},
+];
+
 const attributesOptions = [
   { text: "Legendary", value: "legendary" },
   { text: "Mythical", value: "mythical" },
@@ -144,7 +152,22 @@ export default function HomePage() {
                         key={option.value} 
                         text={option.text} 
                         onClick={() => addToSearchString(option.value)} 
-                        className="bg-orange-400 text-black" // Default color for search criteria
+                        className="bg-amber-600 text-black" 
+                    />
+                ))}
+            </div>
+          </div>
+
+          {/* Appraisal*/}
+          <div className="flex flex-col items-center my-2">
+            <h3 className="text-lg font-semibold mb-2">Appraisal</h3>
+            <div className="flex gap-4 flex-wrap">
+                {appraisal.map(option => (
+                    <Button 
+                        key={option.value} 
+                        text={option.text} 
+                        onClick={() => addToSearchString(option.value)} 
+                        className={`${option.color} text-black`} 
                     />
                 ))}
             </div>
@@ -159,7 +182,7 @@ export default function HomePage() {
                         key={option.value} 
                         text={option.text} 
                         onClick={() => addToSearchString(option.value)} 
-                        className="bg-gray-300 text-black" // Default color for search criteria
+                        className="bg-gray-300 text-black" 
                     />
                 ))}
             </div>

@@ -26,13 +26,19 @@ const typeOptions = [
 ];
 
 const regions = [
-  { text: "Hoenn", value: "kanto" },
-  { text: "Mythical", value: "johto" },
-  { text: "Shiny", value: "kalos" },
-  { text: "Weather Boosted", value: "weather_boosted" },
-];
+  { text: "Kanto", value: "kanto" },
+  { text: "Johto", value: "johto" },
+  { text: "Heonn", value: "heonn" },
+  { text: "Sinnoh", value: "sinnoh" },
+  { text: "Unova", value: "unova" },
+  { text: "Kalos", value: "kalos" },
+  { text: "Alola", value: "alola" },
+  { text: "Galar", value: "galar" },
+  { text: "Hisui", value: "hisui" },
+  { text: "Paldea", value: "paldea" }
+]
 
-const searchCriteriaOptions = [
+const attributesOptions = [
   { text: "Legendary", value: "legendary" },
   { text: "Mythical", value: "mythical" },
   { text: "Shiny", value: "shiny" },
@@ -129,13 +135,26 @@ export default function HomePage() {
             </div>
           </div>
 
-          
+          {/* Regions*/}
+          <div className="flex flex-col items-center my-2">
+            <h3 className="text-lg font-semibold mb-2">Region</h3>
+            <div className="flex gap-4 flex-wrap">
+                {regions.map(option => (
+                    <Button 
+                        key={option.value} 
+                        text={option.text} 
+                        onClick={() => addToSearchString(option.value)} 
+                        className="bg-orange-400 text-black" // Default color for search criteria
+                    />
+                ))}
+            </div>
+          </div>
 
-          {/* Search Criteria Section */}
+          {/* Attributes */}
           <div className="flex flex-col items-center my-2">
             <h3 className="text-lg font-semibold mb-2">Attributes</h3>
             <div className="flex gap-4 flex-wrap">
-                {searchCriteriaOptions.map(option => (
+                {attributesOptions.map(option => (
                     <Button 
                         key={option.value} 
                         text={option.text} 

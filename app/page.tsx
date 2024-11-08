@@ -46,12 +46,81 @@ const appraisal = [
   { text: "Perfect", value: "4*", color: "bg-red-400"},
 ];
 
-const attributesOptions = [
-  { text: "Legendary", value: "legendary" },
-  { text: "Mythical", value: "mythical" },
-  { text: "Shiny", value: "shiny" },
-  { text: "Weather Boosted", value: "weather_boosted" },
+
+// -------------------- new stuff--------------
+
+// **Acquirement Type Filters** ✔
+const AcquirementFilters = [
+  { text: "GO Battle League", value: "gbl" },
+  { text: "Hatched", value: "hatched" },
+  { text: "Eggs Only (Baby Pokémon)", value: "eggsonly" },
+  { text: "Raid Battle", value: "raid" },
+  { text: "Research Task", value: "research" },
+  { text: "Team GO Rocket", value: "rocket" },
+  { text: "Traded", value: "traded" }
 ];
+
+// **Size Filters** ✔
+const SizeFilters = [
+  { text: "XXS", value: "xxs" },
+  { text: "XS", value: "xs" },
+  { text: "XL", value: "xl" },
+  { text: "XXL", value: "xxl" }
+];
+
+// **Gender Filters** ✔
+const GenderFilters = [
+  { text: "Female ♀", value: "female" },
+  { text: "Male ♂", value: "male" },
+  { text: "Unknown", value: "genderunknown" }
+];
+
+// **Status Filters**
+const StatusFilters = [
+  { text: "Legendary", value: "legendary", color: "bg-purple-200" },
+  { text: "Lucky", value: "lucky", color: "bg-yellow-300" },
+  { text: "Mythical", value: "mythical", color: "bg-rose-100" },
+  { text: "Purified", value: "purified", color: "bg-slate-200" },
+  { text: "Shadow", value: "shadow", color: "bg-[#B57EDC]" },
+  { text: "Shiny", value: "shiny", color: "bg-[#b6fffd]" },
+  { text: "XL Candy Powered", value: "candyxl", color: "bg-gray-300" },
+  { text: "Event Pokémon", value: "costume", color: "bg-gray-300" },
+  { text: "Currently Defending Gyms", value: "defender", color: "bg-gray-300" },
+  { text: "Ultra Beast", value: "ultra beasts", color: "bg-gray-300" },
+  { text: "Location Background", value: "locationbackground", color: "bg-gray-300" },
+  { text: "Special Background", value: "specialbackground", color: "bg-gray-300" },
+  { text: "Any Background", value: "background", color: "bg-gray-300", extraText: "Location or Special Backgrounds" },
+  { text: "Adventure Effect Move", value: "adventureeffect", color: "bg-gray-300" },
+  { text: "Weather Boosted", value: "weather_boosted", color: "bg-gray-300" },
+];
+
+// **Buddy Level Filters** ✔
+const BuddyLevelFilters = [
+  { text: "None", value: "buddy0", addedText: "No Buddy History"},
+  { text: "Level 1", value: "buddy1", addedText: "Never reached Good Buddies"},
+  { text: "Level 2 (❤)", value: "buddy2", addedText: "Good Buddies"},
+  { text: "Level 3 (❤❤)", value: "buddy3", addedText: "Great Buddies"},
+  { text: "Level 4 (❤❤❤)", value: "buddy4", addedText: "Ultra Buddies"},
+  { text: "Level 5 (❤❤❤❤)", value: "buddy5", addedText: "Best Buddies"},
+];
+
+// **Evolution Filters**
+const EvolutionFilters = [
+  { text: "Can Evolve", value: "evolve" },
+  { text: "New Dex Entry on Evolution", value: "evolvenew" },
+  { text: "Evolution Requires Item", value: "item" },
+  { text: "Eligible for Trade Evolution", value: "tradeevolve" },
+  { text: "Buddy Task Evolution", value: "evolvequest" },
+  { text: "Can Fuse", value: "fusion", extraText: "(e.g., Necrozma)"},
+  { text: "Can Mega Evolve", value: "megaevolve" },
+  { text: "Mega Evolution Base Level", value: "mega1" },
+  { text: "Mega Evolution High Level", value: "mega2" },
+  { text: "Mega Evolution Max Level", value: "mega3" },
+  { text: "Can Dynamax", value: "dynamax" },
+  { text: "Can Gigantamax", value: "gigantamax" }
+];
+
+
 
 export default function HomePage() {
   const [searchString, setSearchString] = useState('');
@@ -95,207 +164,266 @@ export default function HomePage() {
   };
 
   return (
-    <div className="p-6">
-      <SearchBuilder searchString={searchString} />
-      <div className='flex'>
-        <div className="items-center mx-auto">
-          <div className="flex flex-row gap-8 justify-center">
-            <div className="mt-2 flex">
-              <button
-                onClick={setAndOperator}
-                className={`py-2 px-4 ${currentOperator === '&' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
-              >
-                AND
-              </button>
-              <button
-                onClick={setOrOperator}
-                className={`py-2 px-4 ${currentOperator === ',' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
-              >
-                OR
-              </button>
-              <button
-                onClick={toggleNegation}
-                className={`mx-4 py-2 px-4 w rounded ${isNegate ? 'bg-rose-500 text-white' : 'bg-gray-300 text-black'}`}
-              >
-                Not {!isNegate ? '(OFF)' : '(ON)'}
-              </button>
-            
-              <button 
-                onClick={clearAll} 
-                className="bg-slate-500 text-white py-2 px-4 rounded hover:bg-rose-500 transition duration-300">
-                Clear All
-              </button>
-            </div>
-        </div>
+  <div > {/* Prevent horizontal scroll */}
+    <SearchBuilder searchString={searchString} />
+    <div className="flex flex-col w-full"> 
+      
+      {/* Options Button */}
+      <div className="items-center w-full "> 
+        <div className="flex flex-row justify-center w-full ">
+          
+          {/* AND/OR Buttons */}
+          <div className=" flex w-full justify-center">
+            {/* AND Button */}
+            <Button
+              onClick={setAndOperator}
+              text="AND"
+              className={`py-2 px-4 ${currentOperator === '&' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+              tooltip="Pokemon has both these attributes"
+            />
 
-          {/* Types Section */}
-          <div className="flex flex-col items-center my-2">
-            <h3 className="text-lg font-semibold mb-2">Types</h3>
-            <div className="flex gap-4 flex-wrap">
-              {typeOptions.map(option => (
-                <Button 
+            {/* OR Button */}
+            <Button
+              onClick={setOrOperator}
+              text="OR"
+              className={`py-2 px-4 ${currentOperator === ',' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+              tooltip="Pokemon has one of these attributes"
+            />
+
+            {/* NOT Button */}
+            <Button
+              onClick={toggleNegation}
+              text={`Not ${!isNegate ? '(OFF)' : '(ON)'}`}
+              className={`mx-4 py-2 px-4 ${isNegate ? 'bg-rose-500 text-white' : 'bg-gray-300 text-black'}`}
+              tooltip="Pokemon doesn't have this attribute"
+            />
+          
+            {/* Clear All Button */}
+            <Button
+              onClick={clearAll}
+              text="Clear All"
+              className="bg-slate-500 text-white py-2 px-4 rounded hover:bg-rose-500 transition duration-300"
+              tooltip="Clears whole string"
+            />
+
+          </div>
+        </div>
+      </div>
+
+      {/* TODO - add a search by pokemon name??? maybe by api? if possible so that it shows all that are in pokemon go and autofill as they type and then select the pokemon
+               - could also allow a button to add all evolutionary levels of that pokemon that they select (think it is like Pikachu+ or something) 
+               - also we didnt add the by pokedex number in so that can be another line of stuff*/}
+
+      {/* ---Types Section--- */}
+      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <div className="flex flex-col items-center w-full">
+        <h3 className="text-lg font-semibold mb-2">Types</h3>
+        <div className="flex gap-4 flex-wrap w-full justify-center">
+          {typeOptions.map(option => (
+            <Button 
+              key={option.value} 
+              text={option.text} 
+              onClick={() => addToSearchString(option.value)} 
+              className={`${option.color} text-black`} 
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* ---Status Filters--- */}
+      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <div className="flex flex-col items-center w-full">
+        <h3 className="text-lg font-semibold mb-2">Status</h3>
+        <div className="flex gap-4 flex-wrap w-full justify-center">
+          {StatusFilters.map(option => (
+              <Button 
                   key={option.value} 
                   text={option.text} 
                   onClick={() => addToSearchString(option.value)} 
                   className={`${option.color} text-black`} 
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Regions*/}
-          <div className="flex flex-col items-center my-2">
-            <h3 className="text-lg font-semibold mb-2">Region</h3>
-            <div className="flex gap-4 flex-wrap">
-                {regions.map(option => (
-                    <Button 
-                        key={option.value} 
-                        text={option.text} 
-                        onClick={() => addToSearchString(option.value)} 
-                        className="bg-amber-600 text-black" 
-                    />
-                ))}
-            </div>
-          </div>
-
-          {/* Appraisal*/}
-          <div className="flex flex-col items-center my-2">
-            <h3 className="text-lg font-semibold mb-2">Appraisal</h3>
-            <div className="flex gap-4 flex-wrap">
-                {appraisal.map(option => (
-                    <Button 
-                        key={option.value} 
-                        text={option.text} 
-                        onClick={() => addToSearchString(option.value)} 
-                        className={`${option.color} text-black`} 
-                    />
-                ))}
-            </div>
-          </div>
-
-          {/* Attributes */}
-          <div className="flex flex-col items-center my-2">
-            <h3 className="text-lg font-semibold mb-2">Attributes</h3>
-            <div className="flex gap-4 flex-wrap">
-                {attributesOptions.map(option => (
-                    <Button 
-                        key={option.value} 
-                        text={option.text} 
-                        onClick={() => addToSearchString(option.value)} 
-                        className="bg-gray-300 text-black" 
-                    />
-                ))}
-            </div>
-          </div>
-
-          {/* CP */}
-          <div className="flex flex-col items-center my-2 mx-auto">
-            <h3 className="text-lg font-semibold">CP</h3>
-            <div className='flex flex-col w-screen items-center'>
-
-              {/* CP = */}
-              <div className='my-4'>
-                <span className='my-auto font-bold'> CP = </span>
-                <input
-                  className=' text-center w-60 
-                    border 
-                    border-gray-300 
-                    rounded-md 
-                    p-2 
-                    focus:outline-none 
-                    focus:border-slate-500 
-                    focus:ring-1 
-                    focus:ring-slate-500 
-                    transition 
-                    duration-200 
-                    ease-in-out 
-                    placeholder:text-gray-400
-                    placeholder:italic
-                    mx-2'
-                  type="number"
-                  placeholder='Enter value greater than 0'
-                  min='1'
-                  value={cpEqualValue}
-                  onChange={(e) => {
-                    const input = Number(e.target.value)
-                    setCpEqualValue(input >= 1 ? input : '');
-                  }}
-                  
-                />
-                <Button
-                  text="ADD"
-                  onClick={handleActionCpEqual}
-                  className='bg-gray-300 text-black'
-                />
-              </div>
-              
-              {/* < CP < */}
-              <div className=''>
-              <input
-                  className=' text-center w-60 
-                    border 
-                    border-gray-300 
-                    rounded-md 
-                    p-2 
-                    focus:outline-none 
-                    focus:border-slate-500 
-                    focus:ring-1 
-                    focus:ring-slate-500 
-                    transition 
-                    duration-200 
-                    ease-in-out 
-                    placeholder:text-gray-400
-                    placeholder:italic
-                    mx-2'
-                  type="number"
-                  placeholder='Enter lower value'
-                  min='0'
-                  value={cpLower}
-                  onChange={(e) => {
-                    const input = Number(e.target.value)
-                    setCpLower(input >= 0 ? input : '');
-                  }}
-                  
-                />
-                <span className='my-auto font-bold'> &lt; CP &lt; </span>
-                <input
-                  className=' text-center w-60 
-                    border 
-                    border-gray-300 
-                    rounded-md 
-                    p-2 
-                    focus:outline-none 
-                    focus:border-slate-500 
-                    focus:ring-1 
-                    focus:ring-slate-500 
-                    transition 
-                    duration-200 
-                    ease-in-out 
-                    placeholder:text-gray-400
-                    placeholder:italic
-                    mx-2'
-                  type="number"
-                  placeholder='Enter upper value'
-                  min='0'
-                  value={cpHigher}
-                  onChange={(e) => {
-                    const input = Number(e.target.value)
-                    setCpHigher(input >= 0 ? input : '');
-                  }}
-                  
-                />
-                <Button
-                  text="ADD"
-                  onClick={handleActionCpLessMoreThan}
-                  className='bg-gray-300 text-black'
-                />
-              </div>
-              
-            </div>
-          </div>
-
+                  tooltip={option.extraText}
+              />
+          ))}
         </div>
       </div>
+
+      {/* ---Regions Section--- */}
+      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <div className="flex flex-col items-center w-full">
+        <h3 className="text-lg font-semibold mb-2">Region</h3>
+        <div className="flex gap-6 flex-wrap w-full justify-center">
+          {regions.map(option => (
+              <Button 
+                  key={option.value} 
+                  text={option.text} 
+                  onClick={() => addToSearchString(option.value)} 
+                  className="bg-amber-600 text-black" 
+              />
+          ))}
+        </div>
+      </div>
+
+      {/* ---Appraisal Section--- */}
+      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <div className="flex flex-col items-center  w-full">
+        <h3 className="text-lg font-semibold mb-2">Appraisal</h3>
+        <div className="flex gap-4 flex-wrap w-full justify-center">
+          {appraisal.map(option => (
+              <Button 
+                  key={option.value} 
+                  text={option.text} 
+                  onClick={() => addToSearchString(option.value)} 
+                  className={`${option.color} text-black`} 
+              />
+          ))}
+        </div>
+      </div>
+
+      {/* ---Size Section--- */}
+      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <div className="flex flex-col items-center w-full">
+        <h3 className="text-lg font-semibold mb-2">Size</h3>
+        <div className="flex gap-4 flex-wrap w-full justify-center">
+          {SizeFilters.map(option => (
+              <Button 
+                  key={option.value} 
+                  text={option.text} 
+                  onClick={() => addToSearchString(option.value)} 
+                  className="bg-blue-300 text-black" 
+              />
+          ))}
+        </div>
+      </div>
+
+      {/* ---Gender Section--- */}
+      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <div className="flex flex-col items-center w-full">
+        <h3 className="text-lg font-semibold mb-2">Gender</h3>
+        <div className="flex gap-4 flex-wrap w-full justify-center">
+          {GenderFilters.map(option => (
+              <Button 
+                  key={option.value} 
+                  text={option.text} 
+                  onClick={() => addToSearchString(option.value)} 
+                  className="bg-gray-300 text-black" 
+              />
+          ))}
+        </div>
+      </div>
+
+      {/* ---Buddy Level Section--- */}
+      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <div className="flex flex-col items-center w-full">
+        <h3 className="text-lg font-semibold mb-2">Buddy Level</h3>
+        <div className="flex gap-4 flex-wrap w-full justify-center">
+          {BuddyLevelFilters.map(option => (
+              <Button 
+                  key={option.value} 
+                  text={option.text} 
+                  onClick={() => addToSearchString(option.value)} 
+                  className="bg-gray-300 text-black" 
+                  tooltip={option.addedText}
+              />
+          ))}
+        </div>
+      </div>
+
+      {/* ---Method of Acquirement Section--- */}
+      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <div className="flex flex-col items-center w-full">
+        <h3 className="text-lg font-semibold mb-2">Method of Acquirement</h3>
+        <div className="flex gap-8 flex-wrap w-full justify-center">
+          {AcquirementFilters.map(option => (
+              <Button 
+                  key={option.value} 
+                  text={option.text} 
+                  onClick={() => addToSearchString(option.value)} 
+                  className="bg-gray-300 text-black" 
+              />
+          ))}
+        </div>
+      </div>
+
+      {/* ---Evolution Filters Section--- */}
+      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <div className="flex flex-col items-center w-full">
+        <h3 className="text-lg font-semibold mb-2">Evolution and Max Ability</h3>
+        <div className="flex gap-4 flex-wrap w-full justify-center">
+          {EvolutionFilters.map(option => (
+              <Button 
+                  key={option.value} 
+                  text={option.text} 
+                  onClick={() => addToSearchString(option.value)} 
+                  className="bg-gray-300 text-black" 
+              />
+          ))}
+        </div>
+      </div>
+
+      {/* ---CP Section--- */}
+      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <div className="flex flex-col items-center mx-auto w-full">
+        <h3 className="text-lg font-semibold">Combat Power</h3>
+        <div className="flex flex-col items-center w-full">
+
+          {/* CP = */}
+          <div className="my-4">
+            <span className="my-auto font-bold"> CP = </span>
+            <input
+              className="text-center w-60 border border-gray-300 rounded-md p-2 focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic mx-2"
+              type="number"
+              placeholder="Enter value greater than 0"
+              min="1"
+              value={cpEqualValue}
+              onChange={(e) => {
+                const input = Number(e.target.value)
+                setCpEqualValue(input >= 1 ? input : '');
+              }}
+            />
+            <Button
+              text="ADD"
+              onClick={handleActionCpEqual}
+              className="bg-gray-300 text-black"
+            />
+          </div>
+          
+          {/* < CP < */}
+          <div>
+            <input
+                className="text-center w-60 border border-gray-300 rounded-md p-2 focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic mx-2"
+                type="number"
+                placeholder="Enter lower value"
+                min="0"
+                value={cpLower}
+                onChange={(e) => {
+                  const input = Number(e.target.value)
+                  setCpLower(input >= 0 ? input : '');
+                }}
+            />
+            <span className="my-auto font-bold"> &lt; CP &lt; </span>
+            <input
+              className="text-center w-60 border border-gray-300 rounded-md p-2 focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic mx-2"
+              type="number"
+              placeholder="Enter upper value"
+              min="0"
+              value={cpHigher}
+              onChange={(e) => {
+                const input = Number(e.target.value)
+                setCpHigher(input >= 0 ? input : '');
+              }}
+            />
+            <Button
+              text="ADD"
+              onClick={handleActionCpLessMoreThan}
+              className="bg-gray-300 text-black"
+            />
+            
+          </div>
+        </div>
+      </div>
+      
     </div>
-  );
+  </div>
+);
+
 }

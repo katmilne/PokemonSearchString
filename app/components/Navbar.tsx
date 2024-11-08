@@ -6,7 +6,7 @@ import Image from 'next/image'
 
 export default function Navbar() {
   return (
-    <nav className="bg-rose-300 text-white px-4">
+    <nav className="bg-rose-300 text-white ">
         <div className='flex items-center justify-end px-10'>
             <div className='flex flex-col px-4'>
                 <div className='text-3xl font-bold text-right'>

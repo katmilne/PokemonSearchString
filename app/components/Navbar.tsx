@@ -7,7 +7,7 @@ import Image from 'next/image'
 export default function Navbar() {
   return (
     <nav className="bg-rose-300 text-white ">
-        <div className='flex items-center justify-end px-10'>
+        <div className='flex items-center justify-end p-2 pr-[5%]'>
             <div className='flex flex-col px-4'>
                 <div className='text-3xl font-bold text-right'>
                     PokéString 
@@ -22,8 +22,8 @@ export default function Navbar() {
             <Image
                 src="/favicon.png"
                 alt="Pixel chansey"
-                width={120}               
-                height={200}              
+                width={80}               
+                height={100}              
             />
         </div>
         {/* Add more links as needed */}

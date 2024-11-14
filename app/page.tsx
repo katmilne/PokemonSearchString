@@ -213,7 +213,7 @@ export default function HomePage() {
                - also we didnt add the by pokedex number in so that can be another line of stuff
       */}
 
-      {/* Pokemon name input */}
+      {/* Pokemon name input w/evolutions */}
       <hr className="my-4 mx-20 border-t-1 border-gray-300" />
       <div className="my-4 mx-auto">
             

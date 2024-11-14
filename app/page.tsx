@@ -1,6 +1,6 @@
 "use client"; // Ensure this is present
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchBuilder from './components/SearchBuilder';
 import Button from './components/Button';
 
@@ -46,10 +46,6 @@ const appraisal = [
   { text: "Perfect", value: "4*", color: "bg-red-400"},
 ];
 
-
-// -------------------- new stuff--------------
-
-// **Acquirement Type Filters** ✔
 const AcquirementFilters = [
   { text: "GO Battle League", value: "gbl" },
   { text: "Hatched", value: "hatched" },
@@ -60,7 +56,6 @@ const AcquirementFilters = [
   { text: "Traded", value: "traded" }
 ];
 
-// **Size Filters** ✔
 const SizeFilters = [
   { text: "XXS", value: "xxs" },
   { text: "XS", value: "xs" },
@@ -68,14 +63,12 @@ const SizeFilters = [
   { text: "XXL", value: "xxl" }
 ];
 
-// **Gender Filters** ✔
 const GenderFilters = [
   { text: "Female ♀", value: "female" },
   { text: "Male ♂", value: "male" },
   { text: "Unknown", value: "genderunknown" }
 ];
 
-// **Status Filters**
 const StatusFilters = [
   { text: "Legendary", value: "legendary", color: "bg-purple-200" },
   { text: "Lucky", value: "lucky", color: "bg-yellow-300" },
@@ -94,7 +87,6 @@ const StatusFilters = [
   { text: "Weather Boosted", value: "weather_boosted", color: "bg-gray-300" },
 ];
 
-// **Buddy Level Filters** ✔
 const BuddyLevelFilters = [
   { text: "None", value: "buddy0", addedText: "No Buddy History"},
   { text: "Level 1", value: "buddy1", addedText: "Never reached Good Buddies"},
@@ -104,7 +96,6 @@ const BuddyLevelFilters = [
   { text: "Level 5 (❤❤❤❤)", value: "buddy5", addedText: "Best Buddies"},
 ];
 
-// **Evolution Filters**
 const EvolutionFilters = [
   { text: "Can Evolve", value: "evolve" },
   { text: "New Dex Entry on Evolution", value: "evolvenew" },
@@ -121,7 +112,6 @@ const EvolutionFilters = [
 ];
 
 
-
 export default function HomePage() {
   const [searchString, setSearchString] = useState('');
   const [currentOperator, setCurrentOperator] = useState<'&' | ','>('&');
@@ -129,7 +119,7 @@ export default function HomePage() {
   const [cpEqualValue, setCpEqualValue] = useState<string | number>('');
   const [cpLower, setCpLower] = useState<string | number>('');
   const [cpHigher, setCpHigher] = useState<string | number>('');
-
+    
   const addToSearchString = (value: string) => {
     const negationSymbol = isNegate ? '!' : '';
     setSearchString(prev => (prev ? `${prev}${currentOperator}${negationSymbol}${value}` : `${negationSymbol}${value}`));
@@ -163,9 +153,12 @@ export default function HomePage() {
     setSearchString('');
   };
 
+
   return (
   <div > {/* Prevent horizontal scroll */}
+
     <SearchBuilder searchString={searchString} />
+
     <div className="flex flex-col w-full"> 
       
       {/* Options Button */}
@@ -210,10 +203,14 @@ export default function HomePage() {
         </div>
       </div>
 
+      
+
       {/* TODO - add a search by pokemon name??? maybe by api? if possible so that it shows all that are in pokemon go and autofill as they type and then select the pokemon
                - could also allow a button to add all evolutionary levels of that pokemon that they select (think it is like Pikachu+ or something) 
-               - also we didnt add the by pokedex number in so that can be another line of stuff*/}
+               - also we didnt add the by pokedex number in so that can be another line of stuff
+      */}
 
+      
       {/* ---Types Section--- */}
       <hr className="my-4 mx-20 border-t-1 border-gray-300" />
       <div className="flex flex-col items-center w-full">

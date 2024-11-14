@@ -119,6 +119,7 @@ export default function HomePage() {
   const [cpEqualValue, setCpEqualValue] = useState<string | number>('');
   const [cpLower, setCpLower] = useState<string | number>('');
   const [cpHigher, setCpHigher] = useState<string | number>('');
+  const [pokeNameInput, setPokeNameInput] = useState('');
     
   const addToSearchString = (value: string) => {
     const negationSymbol = isNegate ? '!' : '';
@@ -133,6 +134,7 @@ export default function HomePage() {
     }
     
   };
+
   const handleActionCpEqual = () => {
     addToSearchString("cp" + cpEqualValue);
   };
@@ -152,6 +154,7 @@ export default function HomePage() {
   const clearAll = () => {
     setSearchString('');
   };
+
 
 
   return (
@@ -210,6 +213,25 @@ export default function HomePage() {
                - also we didnt add the by pokedex number in so that can be another line of stuff
       */}
 
+      {/* Pokemon name input */}
+      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <div className="my-4 mx-auto">
+            
+            <input
+              className="text-center w-60 border border-gray-300 rounded-md p-2 focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic mx-2"
+              type="text"
+              placeholder="Filter by Pokemon name"
+              value={pokeNameInput}
+              onChange={(e) => {
+                setPokeNameInput(e.target.value);
+              }}
+            />
+            <Button
+              text="ADD"
+              onClick={() => addToSearchString(pokeNameInput.toLocaleLowerCase())} 
+              className="bg-gray-300 text-black"
+            />
+      </div>
       
       {/* ---Types Section--- */}
       <hr className="my-4 mx-20 border-t-1 border-gray-300" />

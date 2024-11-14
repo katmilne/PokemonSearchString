@@ -228,7 +228,18 @@ export default function HomePage() {
             />
             <Button
               text="ADD"
-              onClick={() => addToSearchString(pokeNameInput.toLocaleLowerCase())} 
+              onClick={() => {
+                addToSearchString(pokeNameInput.toLocaleLowerCase())
+                setPokeNameInput('');
+              }} 
+              className="bg-gray-300 text-black mr-2"
+            />
+            <Button
+              text="ADD (Include Evolutions)"
+              onClick={() => {
+                addToSearchString(pokeNameInput.toLocaleLowerCase() + "+")
+                setPokeNameInput('');
+              }} 
               className="bg-gray-300 text-black"
             />
       </div>

@@ -120,6 +120,7 @@ export default function HomePage() {
   const [cpLower, setCpLower] = useState<string | number>('');
   const [cpHigher, setCpHigher] = useState<string | number>('');
   const [pokeNameInput, setPokeNameInput] = useState('');
+  const [pokedexInput, setPokedexInput] = useState<string | number>('');
     
   const addToSearchString = (value: string) => {
     const negationSymbol = isNegate ? '!' : '';
@@ -138,6 +139,8 @@ export default function HomePage() {
   const handleActionCpEqual = () => {
     addToSearchString("cp" + cpEqualValue);
   };
+
+
 
   const toggleNegation = () => {
     setIsNegate(prev => !prev);
@@ -217,13 +220,17 @@ export default function HomePage() {
       <hr className="my-4 mx-20 border-t-1 border-gray-300" />
       <div className="my-4 mx-auto">
             
+            {/* Pokedex Name Search Bar */}
             <input
               className="text-center w-60 border border-gray-300 rounded-md p-2 focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic mx-2"
-              type="text"
               placeholder="Filter by Pokemon name"
               value={pokeNameInput}
               onChange={(e) => {
-                setPokeNameInput(e.target.value);
+                const value = e.target.value;
+                // Allow only alphabetic characters
+                if (/^[a-zA-Z]*$/.test(value)) {
+                  setPokeNameInput(value);
+                }
               }}
             />
             <Button
@@ -237,11 +244,35 @@ export default function HomePage() {
             <Button
               text="ADD (Include Evolutions)"
               onClick={() => {
-                addToSearchString(pokeNameInput.toLocaleLowerCase() + "+")
+                addToSearchString("+" + pokeNameInput.toLocaleLowerCase())
                 setPokeNameInput('');
               }} 
               className="bg-gray-300 text-black"
             />
+
+            {/* Pokedex Number Search Bar */}
+            <div className='mt-2'>
+              <input
+                className="text-center w-60 border border-gray-300 rounded-md p-2 focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic mx-2"
+                placeholder="Pokedex Number"
+                type='number'
+                value={pokedexInput}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setPokedexInput(Number(val) > 0 ? val : '');                                 
+                }}
+              />
+              <Button
+                text="ADD"
+                onClick={() => {
+                  addToSearchString("" + pokedexInput)
+                  setPokedexInput('');
+                }} 
+                className="bg-gray-300 text-black mr-2"
+              />
+            </div>
+            
+
       </div>
       
       {/* ---Types Section--- */}

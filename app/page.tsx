@@ -223,7 +223,7 @@ export default function HomePage() {
             {/* Pokedex Name Search Bar */}
             <input
               className="text-center w-60 border border-gray-300 rounded-md p-2 focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic mx-2"
-              placeholder="Filter by Pokemon name"
+              placeholder="Filter by Pokemon name/tag"
               value={pokeNameInput}
               onChange={(e) => {
                 const value = e.target.value;

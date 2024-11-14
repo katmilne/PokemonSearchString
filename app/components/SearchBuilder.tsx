@@ -16,7 +16,7 @@ const SearchBuilder: React.FC<SearchBuilderProps> = ({ searchString }) => {
   return (
     <div className="flex justify-center p-4 bg-gray-100 rounded-lg shadow-md w-[80%] my-6 mx-auto">
 
-      <div className='w-full'>
+      <div className='w-full pl-2'>
         <p className={`text-xl ${searchString ? 'text-gray-800 text-center' : 'text-gray-500 italic text-center'}`}>
           {searchString || "Click buttons to build your search!"}
         </p>

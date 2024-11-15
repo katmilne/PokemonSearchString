@@ -1,4 +1,4 @@
-"use client"; // Ensure this is present
+"use client"; // need this for somereason
 
 import React, { useState } from 'react';
 import SearchBuilder from './components/SearchBuilder';

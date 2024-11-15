@@ -1,6 +1,6 @@
 "use client"; // Ensure this is present
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import SearchBuilder from './components/SearchBuilder';
 import Button from './components/Button';
 

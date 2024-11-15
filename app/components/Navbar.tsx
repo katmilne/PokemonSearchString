@@ -1,6 +1,4 @@
 // app/components/Navbar.tsx
-
-import Link from 'next/link';
 import React from 'react';
 import Image from 'next/image'
 
@@ -26,7 +24,7 @@ export default function Navbar() {
                 height={100}              
             />
         </div>
-        {/* Add more links as needed */}
+        {/* Add more links here */}
     </nav>
   );
 }

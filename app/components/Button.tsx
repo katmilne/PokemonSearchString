@@ -14,7 +14,7 @@ const Button: React.FC<ButtonProps> = ({ text, onClick, className, tooltip }) =>
       {/* Button */}
       <button
         onClick={onClick}
-        className={`py-1 px-2 text-xs rounded transition duration-300 ${className}`}
+        className={`py-2 sm:py-1 px-3 sm:px-2 text-sm sm:text-xs rounded transition duration-300 ${className}`}
       >
         {text}
       </button>

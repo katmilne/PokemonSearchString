@@ -180,312 +180,318 @@ export default function HomePage() {
 
 
   return (
-  <div > {/* Prevent horizontal scroll */}
+  <div className="px-4 md:px-6 lg:px-8"> {/* Add reasonable margins */}
 
-    <SearchBuilder searchString={searchString} onClear={clearAll} onRemoveLast={removeLast} />
-
-    <div className="flex flex-col w-full"> 
+    {/* Combined Sticky Container for Mobile */}
+    <div className="sticky top-0 z-10 sm:static">
+      <SearchBuilder searchString={searchString} onClear={clearAll} onRemoveLast={removeLast} />
       
       {/* Options Button */}
-      <div className="flex justify-center w-full mb-2"> 
-        <div className="flex gap-2">
+      <div className="sm:static flex justify-center w-[95%] sm:w-full mb-2 bg-gray-100 sm:bg-transparent py-2 sm:py-0 mx-auto rounded-b-lg sm:rounded-none sm:mt-2"> 
+        <div className="flex flex-wrap gap-2 justify-center">
           {/* AND Button */}
           <Button
             onClick={setAndOperator}
-            text="AND"
-            className={`${currentOperator === '&' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
-            tooltip="Pokemon has both these attributes"
+            text={isNegate ? "Exclude ALL" : "Must Have ALL"}
+            className={`${currentOperator === '&' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'} text-xs sm:text-sm`}
+            tooltip={isNegate ? "Pokemon must NOT have ALL selected filters" : "Pokemon must have ALL selected filters (Fire AND Legendary)"}
           />
 
           {/* OR Button */}
           <Button
             onClick={setOrOperator}
-            text="OR"
-            className={`${currentOperator === ',' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
-            tooltip="Pokemon has one of these attributes"
+            text={isNegate ? "Exclude Any" : "Any Of These"}
+            className={`${currentOperator === ',' ? 'bg-green-500 text-white' : 'bg-gray-300 text-black'} text-xs sm:text-sm`}
+            tooltip={isNegate ? "Pokemon must NOT have ANY of the selected filters" : "Pokemon can have ANY of the selected filters (Fire OR Water)"}
           />
 
           {/* NOT Button */}
           <Button
             onClick={toggleNegation}
-            text={`Not ${!isNegate ? '(OFF)' : '(ON)'}`}
-            className={`${isNegate ? 'bg-rose-500 text-white' : 'bg-gray-300 text-black'}`}
-            tooltip="Pokemon doesn't have this attribute"
+            text={`Exclude Mode ${!isNegate ? 'OFF' : 'ON'}`}
+            className={`${isNegate ? 'bg-rose-500 text-white' : 'bg-gray-300 text-black'} text-xs sm:text-sm`}
+            tooltip={isNegate ? "Currently excluding Pokemon - click to include instead" : "Currently including Pokemon - click to exclude instead"}
           />
         </div>
       </div>
+    </div>
 
-      
-
-      {/* TODO - add a search by pokemon name??? maybe by api? if possible so that it shows all that are in pokemon go and autofill as they type and then select the pokemon
-               - could also allow a button to add all evolutionary levels of that pokemon that they select (think it is like Pikachu+ or something) 
-               - also we didnt add the by pokedex number in so that can be another line of stuff
-      */}
-
-      {/* Pokemon name input w/evolutions */}
-      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
-      <div className="my-2 mx-auto flex flex-col items-center gap-2">
-        {/* Pokedex Name Search Bar */}
-        <div className="flex items-center gap-2">
-          <input
-            className="text-center w-48 border border-gray-300 rounded-md p-1 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
-            placeholder="Pokemon name/tag"
-            value={pokeNameInput}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (/^[a-zA-Z]*$/.test(value)) {
-                setPokeNameInput(value);
-              }
-            }}
-          />
-          <Button
-            text="ADD"
-            onClick={() => {
-              addToSearchString(pokeNameInput.toLocaleLowerCase())
-              setPokeNameInput('');
-            }} 
-            className="bg-gray-300 text-black"
-          />
-          <Button
-            text="+ Evos"
-            onClick={() => {
-              addToSearchString("+" + pokeNameInput.toLocaleLowerCase())
-              setPokeNameInput('');
-            }} 
-            className="bg-gray-300 text-black"
-          />
-        </div>
-
-        {/* Pokedex Number Search Bar */}
-        <div className="flex items-center gap-2">
-          <input
-            className="text-center w-48 border border-gray-300 rounded-md p-1 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
-            placeholder="Pokedex Number"
-            type='number'
-            value={pokedexInput}
-            onChange={(e) => {
-              const val = e.target.value;
-              setPokedexInput(Number(val) > 0 ? val : '');                                 
-            }}
-          />
-          <Button
-            text="ADD"
-            onClick={() => {
-              addToSearchString("" + pokedexInput)
-              setPokedexInput('');
-            }} 
-            className="bg-gray-300 text-black"
-          />
-        </div>
-      </div>
-      
-      {/* ---Types Section--- */}
-      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
-      <div className="flex flex-col items-center w-full">
-        <h3 className="text-sm font-semibold mb-1">Types</h3>
-        <div className="flex gap-1 flex-wrap w-full justify-center max-w-4xl mx-auto">
-          {typeOptions.map(option => (
-            <Button 
-              key={option.value} 
-              text={option.text} 
-              onClick={() => addToSearchString(option.value)} 
-              className={`${option.color} text-black`} 
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* ---Status Filters--- */}
-      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
-      <div className="flex flex-col items-center w-full">
-        <h3 className="text-sm font-semibold mb-1">Status</h3>
-        <div className="flex gap-1 flex-wrap w-full justify-center max-w-5xl mx-auto">
-          {StatusFilters.map(option => (
-              <Button 
-                  key={option.value} 
-                  text={option.text} 
-                  onClick={() => addToSearchString(option.value)} 
-                  className={`${option.color} text-black`} 
-                  tooltip={option.extraText}
-              />
-          ))}
-        </div>
-      </div>
-
-      {/* ---Regions Section--- */}
-      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
-      <div className="flex flex-col items-center w-full">
-        <h3 className="text-sm font-semibold mb-1">Region</h3>
-        <div className="flex gap-1 flex-wrap w-full justify-center max-w-3xl mx-auto">
-          {regions.map(option => (
-              <Button 
-                  key={option.value} 
-                  text={option.text} 
-                  onClick={() => addToSearchString(option.value)} 
-                  className="bg-amber-600 text-black" 
-              />
-          ))}
-        </div>
-      </div>
-
-      {/* ---Appraisal Section--- */}
-      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
-      <div className="flex flex-col items-center w-full">
-        <h3 className="text-sm font-semibold mb-1">Appraisal</h3>
-        <div className="flex gap-1 flex-wrap w-full justify-center max-w-2xl mx-auto">
-          {appraisal.map(option => (
-              <Button 
-                  key={option.value} 
-                  text={option.text} 
-                  onClick={() => addToSearchString(option.value)} 
-                  className={`${option.color} text-black`} 
-              />
-          ))}
-        </div>
-      </div>
-
-      {/* ---Size Section--- */}
-      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
-      <div className="flex flex-col items-center w-full">
-        <h3 className="text-sm font-semibold mb-1">Size</h3>
-        <div className="flex gap-1 flex-wrap w-full justify-center">
-          {SizeFilters.map(option => (
-              <Button 
-                  key={option.value} 
-                  text={option.text} 
-                  onClick={() => addToSearchString(option.value)} 
-                  className="bg-blue-300 text-black" 
-              />
-          ))}
-        </div>
-      </div>
-
-      {/* ---Gender Section--- */}
-      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
-      <div className="flex flex-col items-center w-full">
-        <h3 className="text-sm font-semibold mb-1">Gender</h3>
-        <div className="flex gap-1 flex-wrap w-full justify-center">
-          {GenderFilters.map(option => (
-              <Button 
-                  key={option.value} 
-                  text={option.text} 
-                  onClick={() => addToSearchString(option.value)} 
-                  className="bg-gray-300 text-black" 
-              />
-          ))}
-        </div>
-      </div>
-
-      {/* ---Buddy Level Section--- */}
-      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
-      <div className="flex flex-col items-center w-full">
-        <h3 className="text-sm font-semibold mb-1">Buddy Level</h3>
-        <div className="flex gap-1 flex-wrap w-full justify-center max-w-3xl mx-auto">
-          {BuddyLevelFilters.map(option => (
-              <Button 
-                  key={option.value} 
-                  text={option.text} 
-                  onClick={() => addToSearchString(option.value)} 
-                  className="bg-gray-300 text-black" 
-                  tooltip={option.addedText}
-              />
-          ))}
-        </div>
-      </div>
-
-      {/* ---Method of Acquirement Section--- */}
-      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
-      <div className="flex flex-col items-center w-full">
-        <h3 className="text-sm font-semibold mb-1">Method of Acquirement</h3>
-        <div className="flex gap-1 flex-wrap w-full justify-center max-w-4xl mx-auto">
-          {AcquirementFilters.map(option => (
-              <Button 
-                  key={option.value} 
-                  text={option.text} 
-                  onClick={() => addToSearchString(option.value)} 
-                  className="bg-gray-300 text-black" 
-              />
-          ))}
-        </div>
-      </div>
-
-      {/* ---Evolution Filters Section--- */}
-      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
-      <div className="flex flex-col items-center w-full">
-        <h3 className="text-sm font-semibold mb-1">Evolution and Max Ability</h3>
-        <div className="flex gap-1 flex-wrap w-full justify-center max-w-5xl mx-auto">
-          {EvolutionFilters.map(option => (
-              <Button 
-                  key={option.value} 
-                  text={option.text} 
-                  onClick={() => addToSearchString(option.value)} 
-                  className="bg-gray-300 text-black" 
-                  tooltip={option.extraText}
-              />
-          ))}
-        </div>
-      </div>
-
-      {/* ---CP Section--- */}
-      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
-      <div className="flex flex-col items-center mx-auto w-full">
-        <h3 className="text-sm font-semibold mb-1">Combat Power</h3>
-        <div className="flex flex-col items-center w-full gap-2">
-
-          {/* CP = */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-bold">CP =</span>
+    <div className="flex flex-col w-full max-w-7xl mx-auto">
+      {/* ---Input Sections at Top--- */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full mb-2">
+        
+        {/* Pokemon Name & Number Input */}
+        <div className="flex flex-col items-center border border-gray-200 rounded-lg p-2 bg-gray-50">
+          <h3 className="text-xs sm:text-sm font-semibold mb-1 text-center">Pokemon Search</h3>
+          
+          {/* Pokemon Name Search Bar */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mb-2 w-full">
             <input
-              className="text-center w-32 border border-gray-300 rounded-md p-1 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
-              type="number"
-              placeholder="Value > 0"
-              min="1"
-              value={cpEqualValue}
+              className="text-center w-full sm:w-40 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
+              placeholder="Pokemon name/tag"
+              value={pokeNameInput}
               onChange={(e) => {
-                const input = Number(e.target.value)
-                setCpEqualValue(input >= 1 ? input : '');
+                const value = e.target.value;
+                if (/^[a-zA-Z]*$/.test(value)) {
+                  setPokeNameInput(value);
+                }
+              }}
+            />
+            <div className="flex gap-2 w-full sm:w-auto justify-center">
+              <Button
+                text="ADD"
+                onClick={() => {
+                  addToSearchString(pokeNameInput.toLocaleLowerCase())
+                  setPokeNameInput('');
+                }} 
+                className="bg-gray-300 text-black flex-1 sm:flex-none"
+              />
+              <Button
+                text="+ Evos"
+                onClick={() => {
+                  addToSearchString("+" + pokeNameInput.toLocaleLowerCase())
+                  setPokeNameInput('');
+                }} 
+                className="bg-gray-300 text-black flex-1 sm:flex-none"
+              />
+            </div>
+          </div>
+
+          {/* Pokedex Number Search Bar */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full">
+            <input
+              className="text-center w-full sm:w-40 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
+              placeholder="Pokedex Number"
+              type='number'
+              value={pokedexInput}
+              onChange={(e) => {
+                const val = e.target.value;
+                setPokedexInput(Number(val) > 0 ? val : '');                                 
               }}
             />
             <Button
               text="ADD"
+              onClick={() => {
+                addToSearchString("" + pokedexInput)
+                setPokedexInput('');
+              }} 
+              className="bg-gray-300 text-black w-full sm:w-auto"
+            />
+          </div>
+        </div>
+
+        {/* Combat Power Input */}
+        <div className="flex flex-col items-center border border-gray-200 rounded-lg p-2 bg-gray-50">
+          <h3 className="text-xs sm:text-sm font-semibold mb-1 text-center">Combat Power</h3>
+          
+          {/* CP = */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mb-2 w-full">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold">CP =</span>
+              <input
+                className="text-center w-24 sm:w-20 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
+                type="number"
+                placeholder="Value > 0"
+                min="1"
+                value={cpEqualValue}
+                onChange={(e) => {
+                  const input = Number(e.target.value)
+                  setCpEqualValue(input >= 1 ? input : '');
+                }}
+              />
+            </div>
+            <Button
+              text="ADD"
               onClick={handleActionCpEqual}
-              className="bg-gray-300 text-black"
+              className="bg-gray-300 text-black w-full sm:w-auto"
             />
           </div>
           
           {/* < CP < */}
-          <div className="flex items-center gap-2">
-            <input
-                className="text-center w-24 border border-gray-300 rounded-md p-1 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <input
+                  className="text-center w-16 sm:w-20 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
+                  type="number"
+                  placeholder="Min"
+                  min="0"
+                  value={cpLower}
+                  onChange={(e) => {
+                    const input = Number(e.target.value)
+                    setCpLower(input >= 0 ? input : '');
+                  }}
+              />
+              <span className="text-xs sm:text-sm font-bold">&lt; CP &lt;</span>
+              <input
+                className="text-center w-16 sm:w-20 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
                 type="number"
-                placeholder="Min"
+                placeholder="Max"
                 min="0"
-                value={cpLower}
+                value={cpHigher}
                 onChange={(e) => {
                   const input = Number(e.target.value)
-                  setCpLower(input >= 0 ? input : '');
+                  setCpHigher(input >= 0 ? input : '');
                 }}
-            />
-            <span className="text-sm font-bold">&lt; CP &lt;</span>
-            <input
-              className="text-center w-24 border border-gray-300 rounded-md p-1 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
-              type="number"
-              placeholder="Max"
-              min="0"
-              value={cpHigher}
-              onChange={(e) => {
-                const input = Number(e.target.value)
-                setCpHigher(input >= 0 ? input : '');
-              }}
-            />
+              />
+            </div>
             <Button
               text="ADD"
               onClick={handleActionCpLessMoreThan}
-              className="bg-gray-300 text-black"
+              className="bg-gray-300 text-black w-full sm:w-auto"
             />
           </div>
         </div>
       </div>
+
+      
+
+
+      
+      {/* ---All Filter Categories Grid--- */}
+      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 w-full px-4 mb-2">
+        
+        {/* Types Section */}
+        <div className="flex flex-col items-center border border-gray-200 rounded-lg p-2 h-fit min-h-[140px] bg-gray-50">
+          <h3 className="text-sm sm:text-xs font-semibold mb-1 text-center">Types</h3>
+          <div className="flex gap-1 flex-wrap justify-center">
+            {typeOptions.map(option => (
+              <Button 
+                key={option.value} 
+                text={option.text} 
+                onClick={() => addToSearchString(option.value)} 
+                className={`${option.color} text-black`} 
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Status Filters */}
+        <div className="flex flex-col items-center border border-gray-200 rounded-lg p-2 h-fit min-h-[140px] bg-gray-50">
+          <h3 className="text-sm sm:text-xs font-semibold mb-1 text-center">Status</h3>
+          <div className="flex gap-1 flex-wrap justify-center">
+            {StatusFilters.map(option => (
+                <Button 
+                    key={option.value} 
+                    text={option.text} 
+                    onClick={() => addToSearchString(option.value)} 
+                    className={`${option.color} text-black`} 
+                    tooltip={option.extraText}
+                />
+            ))}
+          </div>
+        </div>
+
+        {/* Evolution Filters */}
+        <div className="flex flex-col items-center border border-gray-200 rounded-lg p-2 h-fit min-h-[140px] bg-gray-50">
+          <h3 className="text-sm sm:text-xs font-semibold mb-1 text-center">Evolution</h3>
+          <div className="flex gap-1 flex-wrap justify-center">
+            {EvolutionFilters.map(option => (
+                <Button 
+                    key={option.value} 
+                    text={option.text} 
+                    onClick={() => addToSearchString(option.value)} 
+                    className="bg-gray-300 text-black" 
+                    tooltip={option.extraText}
+                />
+            ))}
+          </div>
+        </div>
+
+        {/* Regions Section */}
+        <div className="flex flex-col items-center border border-gray-200 rounded-lg p-2 h-fit min-h-[140px] bg-gray-50">
+          <h3 className="text-sm sm:text-xs font-semibold mb-1 text-center">Region</h3>
+          <div className="flex gap-1 flex-wrap justify-center">
+            {regions.map(option => (
+                <Button 
+                    key={option.value} 
+                    text={option.text} 
+                    onClick={() => addToSearchString(option.value)} 
+                    className="bg-amber-600 text-black" 
+                />
+            ))}
+          </div>
+        </div>
+
+        {/* Appraisal Section */}
+        <div className="flex flex-col items-center border border-gray-200 rounded-lg p-2 h-fit min-h-[140px] bg-gray-50">
+          <h3 className="text-sm sm:text-xs font-semibold mb-1 text-center">Appraisal</h3>
+          <div className="flex gap-1 flex-wrap justify-center">
+            {appraisal.map(option => (
+                <Button 
+                    key={option.value} 
+                    text={option.text} 
+                    onClick={() => addToSearchString(option.value)} 
+                    className={`${option.color} text-black`} 
+                />
+            ))}
+          </div>
+        </div>
+
+        {/* Method of Acquirement Section */}
+        <div className="flex flex-col items-center border border-gray-200 rounded-lg p-2 h-fit min-h-[140px] bg-gray-50">
+          <h3 className="text-sm sm:text-xs font-semibold mb-1 text-center">Method of Acquirement</h3>
+          <div className="flex gap-1 flex-wrap justify-center">
+            {AcquirementFilters.map(option => (
+                <Button 
+                    key={option.value} 
+                    text={option.text} 
+                    onClick={() => addToSearchString(option.value)} 
+                    className="bg-gray-300 text-black" 
+                />
+            ))}
+          </div>
+        </div>
+
+        {/* Buddy Level Section */}
+        <div className="flex flex-col items-center border border-gray-200 rounded-lg p-2 h-fit min-h-[140px] bg-gray-50">
+          <h3 className="text-sm sm:text-xs font-semibold mb-1 text-center">Buddy Level</h3>
+          <div className="flex gap-1 flex-wrap justify-center">
+            {BuddyLevelFilters.map(option => (
+                <Button 
+                    key={option.value} 
+                    text={option.text} 
+                    onClick={() => addToSearchString(option.value)} 
+                    className="bg-gray-300 text-black" 
+                    tooltip={option.addedText}
+                />
+            ))}
+          </div>
+        </div>
+
+        {/* Size, Gender combined box */}
+        <div className="flex flex-col items-center border border-gray-200 rounded-lg p-2 h-fit min-h-[140px] bg-gray-50">
+          <div className="w-full">
+            <h3 className="text-sm sm:text-xs font-semibold mb-1 text-center">Size</h3>
+            <div className="flex gap-1 flex-wrap justify-center mb-3">
+              {SizeFilters.map(option => (
+                  <Button 
+                      key={option.value} 
+                      text={option.text} 
+                      onClick={() => addToSearchString(option.value)} 
+                      className="bg-blue-300 text-black" 
+                  />
+              ))}
+            </div>
+            <h3 className="text-sm sm:text-xs font-semibold mb-1 text-center">Gender</h3>
+            <div className="flex gap-1 flex-wrap justify-center">
+              {GenderFilters.map(option => (
+                  <Button 
+                      key={option.value} 
+                      text={option.text} 
+                      onClick={() => addToSearchString(option.value)} 
+                      className="bg-gray-300 text-black" 
+                  />
+              ))}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+
+
       
     </div>
   </div>

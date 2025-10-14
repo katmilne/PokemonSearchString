@@ -27,11 +27,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* Layout UI */
+        {/* Layout UI */}
         <Navbar/>
-        }
         <main>{children}</main>
-        <Footer/>
       </body>
     </html>
   )

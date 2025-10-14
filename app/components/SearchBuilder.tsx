@@ -1,5 +1,5 @@
 // app/components/SearchBuilder.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 
 interface SearchBuilderProps {
   searchString: string;
@@ -20,19 +20,19 @@ const SearchBuilder: React.FC<SearchBuilderProps> = ({ searchString, onClear, on
   };
 
   return (
-    <div className="flex justify-center p-2 bg-gray-100 rounded-lg shadow-sm w-[50%] my-3 mx-auto">
+    <div className="flex justify-center p-2 sm:p-3 bg-gray-100 rounded-t-lg sm:rounded-lg shadow-none sm:shadow-sm w-[95%] sm:w-[80%] lg:w-[60%] xl:w-[50%] mb-0 sm:my-4 mx-auto">
 
-      <div className='flex-1 pl-2 overflow-x-auto'>
-        <p className={`text-sm whitespace-nowrap ${searchString ? 'text-gray-800' : 'text-gray-500 italic text-center'}`}>
+      <div className={`flex-1 overflow-x-auto ${searchString ? 'pl-2 sm:pl-4' : 'flex items-center justify-center'}`}>
+        <p className={`text-sm sm:text-lg whitespace-nowrap ${searchString ? 'text-gray-800 text-left' : 'text-gray-500 italic text-center'}`}>
           {searchString || "Click buttons to build your search!"}
         </p>
       </div>
 
-      <div className='flex justify-end pr-2 gap-1'>
+      <div className='flex justify-end pr-2 sm:pr-4 gap-1 sm:gap-2'>
         {/* Remove Last Button */}
         <button
           onClick={onRemoveLast}
-          className={`px-2 py-1 text-xs rounded-md font-bold transition-colors ${
+          className={`px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm rounded-md font-bold transition-colors ${
             searchString 
               ? 'bg-orange-300 hover:bg-orange-400 cursor-pointer' 
               : 'bg-gray-200 text-gray-400 cursor-not-allowed'
@@ -45,7 +45,7 @@ const SearchBuilder: React.FC<SearchBuilderProps> = ({ searchString, onClear, on
         {/* Clear Button */}
         <button
           onClick={onClear}
-          className="bg-red-300 px-2 py-1 text-xs rounded-md hover:bg-red-400 font-bold"
+          className="bg-red-300 px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm rounded-md hover:bg-red-400 font-bold"
           title="Clear All"
         >
           ×
@@ -53,7 +53,7 @@ const SearchBuilder: React.FC<SearchBuilderProps> = ({ searchString, onClear, on
         {/* Copy Button */}
         <button
           onClick={copyToClipboard}
-          className={`px-2 py-1 text-xs rounded-md transition-colors ${
+          className={`px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm rounded-md transition-colors ${
             copySuccess 
               ? 'bg-green-300 text-green-800' 
               : 'bg-slate-300 hover:bg-slate-400'

@@ -158,54 +158,60 @@ export default function HomePage() {
     setSearchString('');
   };
 
+  const removeLast = () => {
+    setSearchString(prev => {
+      if (!prev) return '';
+      
+      // Find the last operator (& or ,) and remove everything after it
+      const lastAmpersand = prev.lastIndexOf('&');
+      const lastComma = prev.lastIndexOf(',');
+      const lastOperatorIndex = Math.max(lastAmpersand, lastComma);
+      
+      // If no operator found, clear the entire string (it's the first/only filter)
+      if (lastOperatorIndex === -1) {
+        return '';
+      }
+      
+      // Remove everything from the last operator onwards
+      return prev.substring(0, lastOperatorIndex);
+    });
+  };
+
 
 
   return (
   <div > {/* Prevent horizontal scroll */}
 
-    <SearchBuilder searchString={searchString} />
+    <SearchBuilder searchString={searchString} onClear={clearAll} onRemoveLast={removeLast} />
 
     <div className="flex flex-col w-full"> 
       
       {/* Options Button */}
-      <div className="items-center w-full "> 
-        <div className="flex flex-row justify-center w-full ">
-          
-          {/* AND/OR Buttons */}
-          <div className=" flex w-full justify-center">
-            {/* AND Button */}
-            <Button
-              onClick={setAndOperator}
-              text="AND"
-              className={`py-2 px-4 ${currentOperator === '&' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
-              tooltip="Pokemon has both these attributes"
-            />
+      <div className="flex justify-center w-full mb-2"> 
+        <div className="flex gap-2">
+          {/* AND Button */}
+          <Button
+            onClick={setAndOperator}
+            text="AND"
+            className={`${currentOperator === '&' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+            tooltip="Pokemon has both these attributes"
+          />
 
-            {/* OR Button */}
-            <Button
-              onClick={setOrOperator}
-              text="OR"
-              className={`py-2 px-4 ${currentOperator === ',' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
-              tooltip="Pokemon has one of these attributes"
-            />
+          {/* OR Button */}
+          <Button
+            onClick={setOrOperator}
+            text="OR"
+            className={`${currentOperator === ',' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+            tooltip="Pokemon has one of these attributes"
+          />
 
-            {/* NOT Button */}
-            <Button
-              onClick={toggleNegation}
-              text={`Not ${!isNegate ? '(OFF)' : '(ON)'}`}
-              className={`mx-4 py-2 px-4 ${isNegate ? 'bg-rose-500 text-white' : 'bg-gray-300 text-black'}`}
-              tooltip="Pokemon doesn't have this attribute"
-            />
-          
-            {/* Clear All Button */}
-            <Button
-              onClick={clearAll}
-              text="Clear All"
-              className="bg-slate-500 text-white py-2 px-4 rounded hover:bg-rose-500 transition duration-300"
-              tooltip="Clears whole string"
-            />
-
-          </div>
+          {/* NOT Button */}
+          <Button
+            onClick={toggleNegation}
+            text={`Not ${!isNegate ? '(OFF)' : '(ON)'}`}
+            className={`${isNegate ? 'bg-rose-500 text-white' : 'bg-gray-300 text-black'}`}
+            tooltip="Pokemon doesn't have this attribute"
+          />
         </div>
       </div>
 
@@ -217,69 +223,67 @@ export default function HomePage() {
       */}
 
       {/* Pokemon name input w/evolutions */}
-      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
-      <div className="my-4 mx-auto">
-            
-            {/* Pokedex Name Search Bar */}
-            <input
-              className="text-center w-60 border border-gray-300 rounded-md p-2 focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic mx-2"
-              placeholder="Filter by Pokemon name/tag"
-              value={pokeNameInput}
-              onChange={(e) => {
-                const value = e.target.value;
-                // Allow only alphabetic characters
-                if (/^[a-zA-Z]*$/.test(value)) {
-                  setPokeNameInput(value);
-                }
-              }}
-            />
-            <Button
-              text="ADD"
-              onClick={() => {
-                addToSearchString(pokeNameInput.toLocaleLowerCase())
-                setPokeNameInput('');
-              }} 
-              className="bg-gray-300 text-black mr-2"
-            />
-            <Button
-              text="ADD (Include Evolutions)"
-              onClick={() => {
-                addToSearchString("+" + pokeNameInput.toLocaleLowerCase())
-                setPokeNameInput('');
-              }} 
-              className="bg-gray-300 text-black"
-            />
+      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
+      <div className="my-2 mx-auto flex flex-col items-center gap-2">
+        {/* Pokedex Name Search Bar */}
+        <div className="flex items-center gap-2">
+          <input
+            className="text-center w-48 border border-gray-300 rounded-md p-1 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
+            placeholder="Pokemon name/tag"
+            value={pokeNameInput}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^[a-zA-Z]*$/.test(value)) {
+                setPokeNameInput(value);
+              }
+            }}
+          />
+          <Button
+            text="ADD"
+            onClick={() => {
+              addToSearchString(pokeNameInput.toLocaleLowerCase())
+              setPokeNameInput('');
+            }} 
+            className="bg-gray-300 text-black"
+          />
+          <Button
+            text="+ Evos"
+            onClick={() => {
+              addToSearchString("+" + pokeNameInput.toLocaleLowerCase())
+              setPokeNameInput('');
+            }} 
+            className="bg-gray-300 text-black"
+          />
+        </div>
 
-            {/* Pokedex Number Search Bar */}
-            <div className='mt-2'>
-              <input
-                className="text-center w-60 border border-gray-300 rounded-md p-2 focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic mx-2"
-                placeholder="Pokedex Number"
-                type='number'
-                value={pokedexInput}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setPokedexInput(Number(val) > 0 ? val : '');                                 
-                }}
-              />
-              <Button
-                text="ADD"
-                onClick={() => {
-                  addToSearchString("" + pokedexInput)
-                  setPokedexInput('');
-                }} 
-                className="bg-gray-300 text-black mr-2"
-              />
-            </div>
-            
-
+        {/* Pokedex Number Search Bar */}
+        <div className="flex items-center gap-2">
+          <input
+            className="text-center w-48 border border-gray-300 rounded-md p-1 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
+            placeholder="Pokedex Number"
+            type='number'
+            value={pokedexInput}
+            onChange={(e) => {
+              const val = e.target.value;
+              setPokedexInput(Number(val) > 0 ? val : '');                                 
+            }}
+          />
+          <Button
+            text="ADD"
+            onClick={() => {
+              addToSearchString("" + pokedexInput)
+              setPokedexInput('');
+            }} 
+            className="bg-gray-300 text-black"
+          />
+        </div>
       </div>
       
       {/* ---Types Section--- */}
-      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
       <div className="flex flex-col items-center w-full">
-        <h3 className="text-lg font-semibold mb-2">Types</h3>
-        <div className="flex gap-4 flex-wrap w-full justify-center">
+        <h3 className="text-sm font-semibold mb-1">Types</h3>
+        <div className="flex gap-1 flex-wrap w-full justify-center max-w-4xl mx-auto">
           {typeOptions.map(option => (
             <Button 
               key={option.value} 
@@ -292,10 +296,10 @@ export default function HomePage() {
       </div>
 
       {/* ---Status Filters--- */}
-      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
       <div className="flex flex-col items-center w-full">
-        <h3 className="text-lg font-semibold mb-2">Status</h3>
-        <div className="flex gap-4 flex-wrap w-full justify-center">
+        <h3 className="text-sm font-semibold mb-1">Status</h3>
+        <div className="flex gap-1 flex-wrap w-full justify-center max-w-5xl mx-auto">
           {StatusFilters.map(option => (
               <Button 
                   key={option.value} 
@@ -309,10 +313,10 @@ export default function HomePage() {
       </div>
 
       {/* ---Regions Section--- */}
-      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
       <div className="flex flex-col items-center w-full">
-        <h3 className="text-lg font-semibold mb-2">Region</h3>
-        <div className="flex gap-6 flex-wrap w-full justify-center">
+        <h3 className="text-sm font-semibold mb-1">Region</h3>
+        <div className="flex gap-1 flex-wrap w-full justify-center max-w-3xl mx-auto">
           {regions.map(option => (
               <Button 
                   key={option.value} 
@@ -325,10 +329,10 @@ export default function HomePage() {
       </div>
 
       {/* ---Appraisal Section--- */}
-      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
-      <div className="flex flex-col items-center  w-full">
-        <h3 className="text-lg font-semibold mb-2">Appraisal</h3>
-        <div className="flex gap-4 flex-wrap w-full justify-center">
+      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
+      <div className="flex flex-col items-center w-full">
+        <h3 className="text-sm font-semibold mb-1">Appraisal</h3>
+        <div className="flex gap-1 flex-wrap w-full justify-center max-w-2xl mx-auto">
           {appraisal.map(option => (
               <Button 
                   key={option.value} 
@@ -341,10 +345,10 @@ export default function HomePage() {
       </div>
 
       {/* ---Size Section--- */}
-      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
       <div className="flex flex-col items-center w-full">
-        <h3 className="text-lg font-semibold mb-2">Size</h3>
-        <div className="flex gap-4 flex-wrap w-full justify-center">
+        <h3 className="text-sm font-semibold mb-1">Size</h3>
+        <div className="flex gap-1 flex-wrap w-full justify-center">
           {SizeFilters.map(option => (
               <Button 
                   key={option.value} 
@@ -357,10 +361,10 @@ export default function HomePage() {
       </div>
 
       {/* ---Gender Section--- */}
-      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
       <div className="flex flex-col items-center w-full">
-        <h3 className="text-lg font-semibold mb-2">Gender</h3>
-        <div className="flex gap-4 flex-wrap w-full justify-center">
+        <h3 className="text-sm font-semibold mb-1">Gender</h3>
+        <div className="flex gap-1 flex-wrap w-full justify-center">
           {GenderFilters.map(option => (
               <Button 
                   key={option.value} 
@@ -373,10 +377,10 @@ export default function HomePage() {
       </div>
 
       {/* ---Buddy Level Section--- */}
-      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
       <div className="flex flex-col items-center w-full">
-        <h3 className="text-lg font-semibold mb-2">Buddy Level</h3>
-        <div className="flex gap-4 flex-wrap w-full justify-center">
+        <h3 className="text-sm font-semibold mb-1">Buddy Level</h3>
+        <div className="flex gap-1 flex-wrap w-full justify-center max-w-3xl mx-auto">
           {BuddyLevelFilters.map(option => (
               <Button 
                   key={option.value} 
@@ -390,10 +394,10 @@ export default function HomePage() {
       </div>
 
       {/* ---Method of Acquirement Section--- */}
-      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
       <div className="flex flex-col items-center w-full">
-        <h3 className="text-lg font-semibold mb-2">Method of Acquirement</h3>
-        <div className="flex gap-8 flex-wrap w-full justify-center">
+        <h3 className="text-sm font-semibold mb-1">Method of Acquirement</h3>
+        <div className="flex gap-1 flex-wrap w-full justify-center max-w-4xl mx-auto">
           {AcquirementFilters.map(option => (
               <Button 
                   key={option.value} 
@@ -406,34 +410,35 @@ export default function HomePage() {
       </div>
 
       {/* ---Evolution Filters Section--- */}
-      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
       <div className="flex flex-col items-center w-full">
-        <h3 className="text-lg font-semibold mb-2">Evolution and Max Ability</h3>
-        <div className="flex gap-4 flex-wrap w-full justify-center">
+        <h3 className="text-sm font-semibold mb-1">Evolution and Max Ability</h3>
+        <div className="flex gap-1 flex-wrap w-full justify-center max-w-5xl mx-auto">
           {EvolutionFilters.map(option => (
               <Button 
                   key={option.value} 
                   text={option.text} 
                   onClick={() => addToSearchString(option.value)} 
                   className="bg-gray-300 text-black" 
+                  tooltip={option.extraText}
               />
           ))}
         </div>
       </div>
 
       {/* ---CP Section--- */}
-      <hr className="my-4 mx-20 border-t-1 border-gray-300" />
+      <hr className="my-2 mx-20 border-t-1 border-gray-300" />
       <div className="flex flex-col items-center mx-auto w-full">
-        <h3 className="text-lg font-semibold">Combat Power</h3>
-        <div className="flex flex-col items-center w-full">
+        <h3 className="text-sm font-semibold mb-1">Combat Power</h3>
+        <div className="flex flex-col items-center w-full gap-2">
 
           {/* CP = */}
-          <div className="my-4">
-            <span className="my-auto font-bold"> CP = </span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-bold">CP =</span>
             <input
-              className="text-center w-60 border border-gray-300 rounded-md p-2 focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic mx-2"
+              className="text-center w-32 border border-gray-300 rounded-md p-1 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
               type="number"
-              placeholder="Enter value greater than 0"
+              placeholder="Value > 0"
               min="1"
               value={cpEqualValue}
               onChange={(e) => {
@@ -449,11 +454,11 @@ export default function HomePage() {
           </div>
           
           {/* < CP < */}
-          <div>
+          <div className="flex items-center gap-2">
             <input
-                className="text-center w-60 border border-gray-300 rounded-md p-2 focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic mx-2"
+                className="text-center w-24 border border-gray-300 rounded-md p-1 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
                 type="number"
-                placeholder="Enter lower value"
+                placeholder="Min"
                 min="0"
                 value={cpLower}
                 onChange={(e) => {
@@ -461,11 +466,11 @@ export default function HomePage() {
                   setCpLower(input >= 0 ? input : '');
                 }}
             />
-            <span className="my-auto font-bold"> &lt; CP &lt; </span>
+            <span className="text-sm font-bold">&lt; CP &lt;</span>
             <input
-              className="text-center w-60 border border-gray-300 rounded-md p-2 focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic mx-2"
+              className="text-center w-24 border border-gray-300 rounded-md p-1 text-sm focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition duration-200 ease-in-out placeholder:text-gray-400 placeholder:italic"
               type="number"
-              placeholder="Enter upper value"
+              placeholder="Max"
               min="0"
               value={cpHigher}
               onChange={(e) => {
@@ -478,7 +483,6 @@ export default function HomePage() {
               onClick={handleActionCpLessMoreThan}
               className="bg-gray-300 text-black"
             />
-            
           </div>
         </div>
       </div>

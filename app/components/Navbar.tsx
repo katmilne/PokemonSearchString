@@ -6,12 +6,19 @@ export default function Navbar() {
   return (
     <nav className="bg-white text-black border-b border-gray-200">
         <div className='flex items-center justify-between py-2 px-2 sm:px-4'>
-            <div className="flex-1">
+            <div className="flex-1 flex gap-2 sm:gap-3">
                 <Link 
                     href="/about" 
-                    className="bg-zinc-800 hover:bg-zinc-600 text-white text-xs sm:text-sm font-medium px-3 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105 ml-2 sm:ml-8 lg:ml-24"
+                    className="bg-zinc-800 hover:bg-zinc-600 text-white text-xs sm:text-sm font-medium px-2 sm:px-4 py-2 sm:py-3 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105 ml-2 sm:ml-8 lg:ml-24"
                 >
                     About
+                </Link>
+                <Link 
+                    href="/storage" 
+                    className="bg-pink-300 hover:bg-pink-200 text-white text-xs sm:text-sm font-medium px-2 sm:px-4 py-2 sm:py-3 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                >
+                    <span className="hidden sm:inline">My Storage Method</span>
+                    <span className="sm:hidden">Storage</span>
                 </Link>
             </div>
             
